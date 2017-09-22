@@ -85,15 +85,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                // show result
-                HttpUrl url = response.request().url();
-                String urlStr = url.toString();
-                Uri uri = Uri.parse(urlStr);
-                Intent i = new Intent(Intent.ACTION_VIEW, uri);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
+                if (response.code() == 200) {
+                    // show result
+                    HttpUrl url = response.request().url();
+                    String urlStr = url.toString();
+                    Uri uri = Uri.parse(urlStr);
+                    Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
+                } else {
+                    finish();
+                    Toast.makeText(getApplicationContext(), "通信異常 HTTP Status : " + response.code(), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
